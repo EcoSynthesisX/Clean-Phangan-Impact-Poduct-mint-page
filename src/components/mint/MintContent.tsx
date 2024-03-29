@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 
-import Card from './Card'
+import Card, { CardType, cardTypes } from './Card'
 import { title, subtitle } from './text'
 
 const MintContent = () => (
@@ -14,7 +14,7 @@ export default MintContent
 
 const Heading = () => (
   <div
-    className={cn('flex flex-col bg-zinc-900 py-2')}
+    className={cn('flex flex-col bg-zinc-900', 'mb-8 py-2')}
     id={'mint-section-heading'}
   >
     <p
@@ -37,8 +37,8 @@ const Heading = () => (
 )
 
 const Cards = () => (
-  <div id={'mint-section-cards'} className={'space-y-4 lg:flex'}>
-    {(['common', 'rare', 'legendary'] as const).map((type) => (
+  <div id={'mint-section-cards'} className={'mt-5 space-y-5 lg:flex'}>
+    {cardTypes.map((type) => (
       <Card key={type} type={type} />
     ))}
   </div>

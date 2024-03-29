@@ -2,21 +2,23 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-
-const types = ['common', 'rare', 'legendary'] as const
-export type Type = (typeof types)[number]
+import { CardType, cardTypes } from './Card'
+import { cn } from '@/lib/utils'
 
 interface PreviewProps extends React.HTMLAttributes<HTMLImageElement> {
-  type: Type
+  type: CardType
+  className?: string
 }
 
-const prefix = (name: string) => `/images/preview/${name}`
+const genPaths = (name: string) =>
+  [0, 1, 2].map((i) => `/images/preview/${name}_${i}.png`)
 
-const typeToImages = {
-  ['common']: [prefix('c0.jpg'), prefix('c1.jpg'), prefix('c2.jpg')],
-  ['rare']: [prefix('r0.jpg'), prefix('r1.jpg'), prefix('r2.jpg')],
-  ['legendary']: [prefix('l0.jpg'), prefix('l1.jpg'), prefix('l2.jpg')],
-}
+const typeToImages = Object.fromEntries(
+  cardTypes.map((type) => [
+    type,
+    [0, 1, 2].map((i) => `/images/preview/${type}_${i}.png`),
+  ]),
+)
 
 const mobilePreviewSize = 120
 const typesToDesktopSizes = {
@@ -25,13 +27,13 @@ const typesToDesktopSizes = {
   ['legendary']: { width: 360, height: 360 },
 }
 
-const Preview: React.FC<PreviewProps> = ({ type }) => {
+const Preview: React.FC<PreviewProps> = ({ type, className }) => {
   const [imageIndex, setImageIndex] = useState(0)
 
   useEffect(() => {
     const interval = setInterval(() => {
       setImageIndex((prevIndex) => (prevIndex + 1) % 3)
-    }, 500)
+    }, 750)
 
     return () => clearInterval(interval)
   }, [])
@@ -39,7 +41,7 @@ const Preview: React.FC<PreviewProps> = ({ type }) => {
   return (
     <>
       <Image
-        className={'block lg:hidden'}
+        className={cn('block lg:hidden', className)}
         src={typeToImages[type][imageIndex]}
         alt='Preview'
         width={mobilePreviewSize}
@@ -47,7 +49,7 @@ const Preview: React.FC<PreviewProps> = ({ type }) => {
       />
 
       <Image
-        className={'hidden lg:block'}
+        className={cn('hidden lg:block', className)}
         src={typeToImages[type][imageIndex]}
         alt='Preview'
         width={typesToDesktopSizes[type].width}
