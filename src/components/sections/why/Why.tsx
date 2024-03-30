@@ -1,8 +1,9 @@
-import ParallaxSection from '@/components/parallax/ParallaxSection'
+import { ReactNode } from 'react'
+
+import ParallaxSection from '@/components/parallax'
 import MintBtn from '@/components/common/buttons'
 
 import WhyContent from './WhyContent'
-import { ReactNode } from 'react'
 
 const content: ReactNode = (
   <div className={'mt-10 flex flex-col items-center gap-4'}>
@@ -17,6 +18,7 @@ const Why: React.FC = () => (
     <ParallaxSection
       className={'hidden md:block'}
       imageSrc={'/images/hero-bg-desktop.svg'}
+      minHeight={'55vh'}
     >
       {content}
     </ParallaxSection>
@@ -25,6 +27,7 @@ const Why: React.FC = () => (
     <ParallaxSection
       className={'block  lg:hidden'}
       imageSrc={'/images/hero-bg-mobile.svg'}
+      minHeight={'55vh'}
     >
       {content}
     </ParallaxSection>

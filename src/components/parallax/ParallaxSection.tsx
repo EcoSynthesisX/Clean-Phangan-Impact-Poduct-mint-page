@@ -6,46 +6,53 @@ interface ParallaxSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   imageSrc: string
   children: React.ReactNode
   className?: string
+  overlayColor?: string
+  minHeight?: string // Adding minHeight prop for flexibility
 }
 
 const ParallaxSection: React.FC<ParallaxSectionProps> = ({
   imageSrc,
   children,
   className,
+  overlayColor = 'rgba(0, 0, 0, 0.3)',
+  minHeight = '81vh', // Default minimum height to 75vh for a balanced effect
 }) => {
   const [offsetY, setOffsetY] = useState(0)
-  const sectionRef = useRef(null) // Ref for the component's container
+  const sectionRef = useRef<HTMLDivElement>(null)
 
   const handleScroll = () => {
     if (sectionRef.current) {
       const { top } = sectionRef.current.getBoundingClientRect()
-      // Adjust the offset based on the component's position and the scroll position
       setOffsetY(top * 0.5)
     }
   }
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const optimizedHandleScroll = () =>
+      window.requestAnimationFrame(handleScroll)
+
+    window.addEventListener('scroll', optimizedHandleScroll)
+    return () => window.removeEventListener('scroll', optimizedHandleScroll)
   }, [])
 
   return (
     <div
       ref={sectionRef}
-      className={`relative h-screen w-full overflow-hidden ${className || ''}`}
+      className={`relative overflow-hidden ${className || ''}`}
+      style={{ minHeight }} // Using the minHeight prop
     >
       <div
-        className='absolute inset-0 bg-fixed bg-no-repeat opacity-20'
+        className='absolute inset-0 bg-fixed bg-no-repeat opacity-50'
         style={{
           backgroundImage: `url(${imageSrc})`,
-          transform: `translateY(${offsetY}px)`, // Use offsetY for the transform
+          transform: `translateY(${offsetY}px)`,
         }}
-      ></div>
+      />
       <div
-        className='absolute inset-0'
+        className='absolute inset-0 flex items-center justify-center'
         style={{
-          background: 'rgba(0, 0, 0, 0.3)',
-          transform: `translateY(${offsetY}px)`, // Use offsetY for the transform
+          background: overlayColor,
+          transform: `translateY(${offsetY}px)`,
         }}
       >
         {children}
