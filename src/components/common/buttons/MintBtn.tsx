@@ -11,7 +11,7 @@ const MintBtn = ({
     className={cn(
       'rounded-full border border-purple-500',
       'font-bold text-purple-500 lg:text-xl',
-      'lg:mr-8 lg:h-12 lg:px-16',
+      'h-10 lg:mr-8 lg:h-14 lg:px-16',
       className,
     )}
     {...props}
